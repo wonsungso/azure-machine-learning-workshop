@@ -1,4 +1,4 @@
-# 🚀 Azure Machine Learning Deep Learning Workshop (KR)
+# 🚀 Azure Machine Learning Workshop - Basic
 
 이 저장소는 Azure Machine Learning을 처음 접하는 사용자를 위한\
 **Hands-on Deep Learning Workshop** 입니다.
