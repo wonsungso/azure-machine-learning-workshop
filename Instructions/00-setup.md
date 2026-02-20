@@ -131,6 +131,8 @@ Region            : Korea Central
 > ⚠️ **주의**: NCv3 series (V100 GPU)가 필요합니다.  
 > 만약 리전에서 사용 불가능하면 다른 리전으로 변경하세요.
 
+![](./images/07_create_gpu_cluster.png)
+
 생성 후 상태가 **Succeeded**로 변경되면 완료입니다.
 
 ---
