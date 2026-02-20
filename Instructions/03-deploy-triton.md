@@ -303,5 +303,3 @@ Resource Groups → rg-aml-dl-workshop → Delete resource group
 - RAPIDS GPU 데이터 전처리
 - PyTorch GPU 학습
 - Triton Endpoint 배포
-
-작성일: 2026-02-19

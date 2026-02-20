@@ -310,5 +310,3 @@ ci-aml-workshop → Stop
 ```
 
 학습된 모델을 Triton Inference Server로 배포합니다.
-
-작성일: 2026-02-19

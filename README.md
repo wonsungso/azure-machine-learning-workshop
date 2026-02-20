@@ -1,10 +1,8 @@
 # 🚀 Azure Machine Learning Workshop - Basic
 
-이 저장소는 Azure Machine Learning을 처음 접하는 사용자를 위한\
-**Hands-on Deep Learning Workshop** 입니다.
+이 저장소는 Azure Machine Learning을 처음 접하는 사용자를 위한 **Hands-on Deep Learning Workshop** 입니다.
 
-본 워크샵에서는 Azure ML Workspace 생성부터 GPU 학습, Triton Endpoint
-배포까지 End-to-End 흐름을 실습합니다.
+본 워크샵에서는 Azure ML Workspace 생성부터 GPU 학습, Triton Endpoint 배포까지 End-to-End 흐름을 실습합니다.
 
 ------------------------------------------------------------------------
 
@@ -113,5 +111,3 @@ GPU 및 Endpoint 비용을 방지할 수 있습니다.
 -   Microsoft Learn(mslearn-deep-learning) 구조 기반
 
 ------------------------------------------------------------------------
-
-작성일: 2026-02-19
