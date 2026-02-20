@@ -42,7 +42,7 @@ RAPIDS는 NVIDIA에서 제공하는 GPU 데이터 사이언스 라이브러리�
 
 ---
 
-## 📋 사전 준비사항
+## 사전 준비사항
 
 아래를 먼저 완료하세요:
 - [00-setup.md](./00-setup.md) 완료
@@ -53,7 +53,7 @@ RAPIDS는 NVIDIA에서 제공하는 GPU 데이터 사이언스 라이브러리�
 
 ---
 
-# 🔧 Environment 생성 (RAPIDS)
+# Environment 생성 (RAPIDS)
 
 RAPIDS 실행을 위해 **Custom Environment**를 생성해야 합니다.
 
@@ -175,7 +175,7 @@ Kernel이 보이지 않는 경우:
 
 ---
 
-## 🧠 왜 GPU 전처리를 사용할까요?
+## 왜 GPU 전처리를 사용할까요?
 
 Deep Learning에서는 데이터 크기가 매우 큽니다.
 

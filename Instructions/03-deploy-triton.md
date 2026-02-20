@@ -1,8 +1,8 @@
-# 🧪 Lab 03 — Triton Inference Server로 모델 배포
+# Lab 03 — Triton Inference Server로 모델 배포
 
 ---
 
-## 🎯 Lab 목표
+## Lab 목표
 
 이 Lab에서는 이전 단계에서 학습한 모델을 Azure Machine Learning의
 Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론을 수행합니다.
@@ -17,7 +17,7 @@ Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론
 
 ---
 
-## 📋 사전 준비사항 (Before you start)
+## 사전 준비사항 (Before you start)
 
 아래를 먼저 완료하세요:
 - [00-setup.md](./00-setup.md) 완료
@@ -30,7 +30,7 @@ Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론
 
 ---
 
-## 🧭 Workshop 전체 흐름에서의 위치
+## Workshop 전체 흐름에서의 위치
 
 ```
 Setup
@@ -44,7 +44,7 @@ PyTorch 모델 학습
 
 ---
 
-## 🧠 Triton Inference Server란?
+## Triton Inference Server란?
 
 NVIDIA Triton은 고성능 모델 추론을 위한 서버입니다.
 
@@ -92,7 +92,7 @@ Create 클릭
 
 ---
 
-## ⏳ 생성 시간
+## 생성 시간
 
 약 2~3분
 
@@ -148,7 +148,7 @@ Deployment = 실제 실행되는 VM
 
 ---
 
-## ⏳ Deployment 준비 과정
+## Deployment 준비 과정
 
 내부적으로:
 
@@ -202,7 +202,7 @@ Response JSON이 반환되면 성공입니다.
 
 ---
 
-# 🧱 최종 아키텍처 구성
+# 최종 아키텍처 구성
 
 ```
 Azure ML Workspace
@@ -214,28 +214,7 @@ Azure ML Workspace
 
 ---
 
-# ⚠️ Troubleshooting
-
-## ❌ Deployment 생성 실패
-
-가능 원인:
-
-- Instance quota 부족
-- 모델 선택 오류
-
-해결:
-
-VM Size를 Standard_DS2_v2로 낮춰 재시도
-
----
-
-## ❌ Endpoint 응답 없음
-
-Deployment 상태가 Healthy인지 확인 후 재시도
-
----
-
-# 🎤 Workshop 진행 포인트
+# Workshop 진행 포인트
 
 이 Lab에서 강조할 내용:
 
@@ -245,7 +224,7 @@ Deployment 상태가 Healthy인지 확인 후 재시도
 
 ---
 
-# 🧹 Workshop 종료 후 리소스 정리 (중요)
+# Workshop 종료 후 리소스 정리 (중요)
 
 Azure Portal에서 Resource Group 삭제:
 
