@@ -1,19 +1,16 @@
-# Lab 03 — Triton Inference Server로 모델 배포
+# Lab 03 — Triton ONNX 모델을 Managed Online Endpoint에 배포
 
 ---
 
 ## Lab 목표
 
-이 Lab에서는 이전 단계에서 학습한 모델을 Azure Machine Learning의
-Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론을 수행합니다.
+이 Lab에서는 Triton no-code deployment를 사용해 ONNX 모델을 Azure Machine Learning Managed Online Endpoint로 배포합니다.
 
 완료 후 상태:
 
-- Managed Online Endpoint 생성
-- Triton Deployment 구성
-- 실시간 Inference 테스트
-
-이 단계는 Workshop의 마지막 단계로, 학습된 모델을 실제 서비스 형태로 배포합니다.
+- Triton 형식 모델 등록
+- Managed Online Endpoint + Deployment 생성
+- Endpoint 호출(추론) 확인
 
 ---
 
@@ -23,10 +20,9 @@ Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론
 - [00-setup.md](./00-setup.md) 완료
 - [01-preprocess-data-rapids.md](./01-preprocess-data-rapids.md) 완료
 - [02-train-model-pytorch.md](./02-train-model-pytorch.md) 완료
-  - ✅ 모델 학습 완료
-  - ✅ 모델 아티팩트 생성
 
-> **참고**: 이 Lab에는 Compute Cluster가 불필요합니다. Managed Online Endpoint가 추론 환경을 제공합니다.
+> 이 Lab은 **GPU Compute Cluster가 필요하지 않습니다.**
+> Endpoint 배포는 Managed Online Endpoint에서 수행합니다.
 
 ---
 
@@ -39,246 +35,144 @@ RAPIDS 데이터 전처리
    ↓
 PyTorch 모델 학습
    ↓
-[현재] Triton Endpoint 배포
+[현재] Triton Endpoint 배포 및 호출
 ```
 
 ---
 
-## Triton Inference Server란?
+# 1️⃣ 모델 등록 (CLI)
 
-NVIDIA Triton은 고성능 모델 추론을 위한 서버입니다.
+## Step 1. Compute Instance 확인 및 Terminal 열기
 
-특징:
-
-- GPU 최적화 Inference
-- ONNX / PyTorch / TensorRT 지원
-- 실시간 API Endpoint 제공
-
-간단히 말하면:
+Azure ML Studio에서:
 
 ```
-Training = 모델 생성
-Triton   = 모델 서비스화
+Manage → Compute → Compute Instances
+```
+
+`ci-aml-workshop`이 Running인지 확인한 뒤, Notebooks 화면에서 Terminal을 엽니다.
+
+---
+
+## Step 2. 배포 폴더로 이동
+
+Terminal에서 아래 명령 실행:
+
+```bash
+cd ~/cloudfiles/code/Users/<your-user-name>/azure-machine-learning-workshop/Notebooks/03-deploy-model
 ```
 
 ---
 
-# 1️⃣ Managed Online Endpoint 생성
+## Step 3. Azure ML CLI 확장 정리/설치 및 로그인
 
-## Step 1. Endpoints 메뉴 이동
-
-Azure ML Studio 좌측:
-
-```
-Assets → Endpoints
-```
-
----
-
-## Step 2. Online Endpoint 생성
-
-```
-+ Create → Real-time endpoint
-```
-
-설정:
-
-```
-Endpoint name : ep-dl-workshop
-Authentication: Key
-```
-
-Create 클릭
-
----
-
-## 생성 시간
-
-약 2~3분
-
----
-
-## ✅ Checkpoint
-
-Endpoint 목록에 아래가 보이면 정상입니다.
-
-```
-ep-dl-workshop
+```bash
+az extension remove -n azure-cli-ml
+az extension remove -n ml
+az extension add -n ml -y
+az login
 ```
 
 ---
 
-# 2️⃣ Triton Deployment 생성
+## Step 4. Triton 모델 등록
 
-## Step 1. Deployment 추가
+폴더 내 `create-triton-model.yaml`을 사용해 모델 등록:
 
-Endpoint 상세 화면:
-
-```
-+ Add deployment
+```bash
+az ml model create -f create-triton-model.yaml
 ```
 
-설정:
-
-```
-Deployment name : triton-deploy
-Instance type   : Standard_DS3_v2
-Instance count  : 1
-Model           : 학습된 모델 선택
-```
-
-Inference Server:
-
-```
-Triton
-```
-
-Create 클릭
+완료 후 **Assets → Models**에서 `densenet-onnx-model`이 생성되었는지 확인합니다.
 
 ---
 
-## 💡 Workshop Tip
+# 2️⃣ Managed Online Endpoint 배포
 
-여기서 참가자에게 설명해 주세요:
+## Step 1. 모델에서 배포 시작
+
+Azure ML Studio에서:
 
 ```
-Endpoint = API 주소
-Deployment = 실제 실행되는 VM
+Assets → Models → densenet-onnx-model
 ```
+
+`Deploy` → `Deploy to real-time endpoint` 선택
 
 ---
 
-## Deployment 준비 과정
+## Step 2. 배포 설정
 
-내부적으로:
+- Endpoint: **New**
+- Endpoint name: **고유 이름** (예: `ep-dl-workshop-<랜덤숫자>`)
+- Compute type: **Managed**
+- Authentication type: **Key**
+- Model: `densenet-onnx-model`
+- VM size: 가능하면 `Standard_NC6s_v3`, 불가 시 `Standard_F4s_v2`
+- Instance count: `1`
 
-```
-Container 생성
-Model 로드
-Triton 서버 시작
-```
-
-이 자동으로 수행됩니다.
-
----
-
-## ✅ Checkpoint
-
-Deployment 상태가 아래처럼 변경됩니다.
-
-```
-Creating → Healthy
-```
-
-Healthy 상태가 되면 준비 완료입니다.
+배포 완료까지 일반적으로 약 10분 소요됩니다.
 
 ---
 
-# 3️⃣ Endpoint 테스트
+## Step 3. Endpoint 정보 저장
 
-## Step 1. Test 탭 이동
+배포 완료 후 Endpoint의 **Consume** 탭에서 아래 값을 복사해 저장하세요.
 
-Endpoint 화면 상단:
+- REST endpoint
+- Primary key
 
-```
-Test
-```
-
----
-
-## Step 2. Sample Payload 입력
-
-```json
-{"input":[1,2,3]}
-```
-
-Run 클릭
+이 값은 다음 단계(호출 노트북)에서 사용합니다.
 
 ---
 
-## ✅ Checkpoint
+# 3️⃣ Endpoint 호출 테스트
 
-Response JSON이 반환되면 성공입니다.
-
----
-
-# 최종 아키텍처 구성
+아래 노트북을 엽니다:
 
 ```
-Azure ML Workspace
-        ├── Compute Instance
-        ├── GPU Compute Cluster
-        └── Managed Online Endpoint
-                └── Triton Deployment
+azure-machine-learning-workshop/Notebooks/03-deploy-model/03-invoke-endpoint.ipynb
 ```
 
----
+노트북 지시에 따라 endpoint URL/key를 입력하고 셀을 실행해 추론 결과를 확인합니다.
 
-# Workshop 진행 포인트
+호출 노트북 체크포인트:
 
-이 Lab에서 강조할 내용:
-
-- Training과 Deployment는 완전히 다른 단계
-- Azure ML은 모델을 바로 API로 배포 가능
-- Triton은 GPU Inference 최적화 서버
+- 라이브러리 설치 셀 실행 완료
+- `endpoint_url`, `primary_key`를 실제 값으로 입력
+- 실행 로그에 예측 Top-K 결과 출력 확인
 
 ---
 
-# Workshop 종료 후 리소스 정리 (중요)
-
-Azure Portal에서 Resource Group 삭제:
-
-```
-rg-aml-dl-workshop
-```
-
-GPU 및 Endpoint 비용을 방지할 수 있습니다.
-
----
-
----
-
-# ⏹️ 실습 종료 후 리소스 정리
-
-모든 실습을 완료한 후 **비용 절감**을 위해 리소스를 정리하세요.
+# 4️⃣ 실습 종료 후 정리
 
 ## Step 1. Compute Instance 중지
-
-Azure ML Studio:
 
 ```
 Manage → Compute → Compute Instances → ci-aml-workshop → Stop
 ```
 
-상태가 **Stopped**으로 변경되면 완료입니다.
-
-## Step 2. Managed Online Endpoint 삭제 (선택사항)
-
-Endpoint가 필요 없으면 삭제하여 비용 절감:
+## Step 2. Endpoint 삭제 (선택)
 
 ```
-Assets → Endpoints → ep-dl-workshop → Delete
+Assets → Endpoints → 생성한 endpoint → Delete
 ```
 
-## Step 3. 전체 리소스 그룹 삭제 (선택사항)
+## Step 3. 전체 리소스 정리 (선택)
 
-Workshop을 완전히 정리할 경우 Azure Portal에서:
+Workshop을 완전히 종료할 경우:
 
 ```
-Resource Groups → rg-aml-dl-workshop → Delete resource group
+Azure Portal → Resource Groups → rg-aml-dl-workshop → Delete resource group
 ```
-
-이를 통해 모든 Azure 리소스(Workspace, Storage, Key Vault 등)가 제거됩니다.
 
 ---
 
 # 🎉 Workshop 완료
 
-축하합니다!
+축하합니다! 이번 워크샵에서 다음을 모두 경험했습니다.
 
-이번 Workshop에서 다음을 경험했습니다:
-
-- Azure ML Workspace 구성
-- RAPIDS GPU 데이터 전처리
+- Azure ML Workspace/Compute 구성
+- RAPIDS 기반 GPU 전처리
 - PyTorch GPU 학습
-- Triton Endpoint 배포
+- Triton 기반 실시간 엔드포인트 배포/호출

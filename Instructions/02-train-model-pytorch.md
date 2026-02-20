@@ -9,7 +9,7 @@ PyTorch 모델 학습을 수행합니다.
 
 완료 후 상태:
 
-- GPU Compute Cluster 생성
+- 기존 GPU Compute Cluster 재사용
 - Azure ML Job 개념 이해
 - PyTorch Training Job 실행
 - 모델 아티팩트 생성 확인
@@ -63,9 +63,9 @@ Job = 학습 실행 요청
 
 ---
 
-# 1️⃣ GPU Compute Cluster 생성
+# 1️⃣ Compute 상태 확인 (재생성 불필요)
 
-## Step 1. Compute 메뉴 이동
+Lab 00에서 이미 생성한 GPU Compute Cluster를 그대로 사용합니다.
 
 Azure ML Studio 좌측:
 
@@ -73,108 +73,42 @@ Azure ML Studio 좌측:
 Manage → Compute
 ```
 
----
-
-## Step 2. Compute Cluster 생성
+확인 항목:
 
 ```
-+ New → Compute Cluster
+Compute Cluster: cc-aml-gpu
 ```
 
-설정값:
-
-```
-Name       : gpu-cluster
-VM Size    : Standard_NC6s_v3
-Min Nodes  : 0
-Max Nodes  : 2
-```
-
-Create 클릭
+> 클러스터가 Idle/Stopped처럼 보여도 정상입니다. Job 제출 시 자동으로 올라옵니다.
 
 ---
 
-## 💡 Workshop Tip
+# 2️⃣ 학습 노트북 열기
 
-GPU VM은 항상 켜져 있지 않습니다.
-
-```
-Job 실행 시 자동 생성
-Job 종료 시 자동 종료
-```
-
-비용 최적화를 위한 구조입니다.
-
----
-
-## 생성 시간
-
-약 2~5분
-
----
-
-## ✅ Checkpoint
-
-Compute 목록에 아래가 보이면 정상입니다.
+Azure ML Studio 좌측:
 
 ```
-gpu-cluster — Idle
+Authoring → Notebooks
+```
+
+아래 경로의 노트북을 엽니다.
+
+```
+azure-machine-learning-workshop/Notebooks/02-train-model/02-train-model.ipynb
 ```
 
 ---
 
-# 2️⃣ Training 코드 확인
+# 3️⃣ 노트북 셀 실행으로 Training Job 제출
 
-Notebook 또는 Repository에서 아래 파일을 확인합니다.
+위에서부터 셀을 순서대로 실행합니다.
 
-```
-train.py
-```
+체크 포인트:
 
-이 파일은 PyTorch 학습을 수행하는 스크립트입니다.
-
----
-
-## 왜 Notebook이 아니라 Job으로 학습하나요?
-
-Notebook은 개발 환경이고,
-
-```
-실제 학습 = Job
-```
-
-으로 실행하는 것이 Azure ML의 권장 방식입니다.
-
----
-
-# 3️⃣ Training Job 생성
-
-## Step 1. Jobs 메뉴 이동
-
-좌측 메뉴:
-
-```
-Author → Jobs
-```
-
----
-
-## Step 2. Command Job 생성
-
-```
-+ Create → Command Job
-```
-
-설정:
-
-```
-Compute : gpu-cluster
-Command : python train.py
-```
-
-코드 경로는 mslearn-deep-learning repo 위치를 선택합니다.
-
-Submit 클릭
+- Workspace 로드 셀 실행 성공
+- Environment 로드 셀 실행 성공
+- `ScriptRunConfig` 셀에서 `compute_target`이 `cc-aml-gpu`인지 확인
+- 제출 셀 실행 (`run.wait_for_completion(show_output=True)`)
 
 ---
 
