@@ -87,12 +87,15 @@ Select environment source : Create a new docker context
 
 ```dockerfile
 FROM rapidsai/rapidsai:21.10-cuda11.0-runtime-ubuntu18.04-py3.7
+SHELL ["/bin/bash", "-c"]
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
    && apt-get update \
-    && apt-get install -y fuse \
-    && source activate rapids \
-    && pip install azureml-mlflow \
-    && pip install azureml-dataprep
+   && apt-get install -y fuse \
+   && conda run -n rapids pip install azureml-mlflow azureml-dataprep \
+   && apt-get clean \
+   && rm -rf /var/lib/apt/lists/*
+ENV PATH=/opt/conda/envs/rapids/bin:$PATH
+ENV CONDA_DEFAULT_ENV=rapids
 ```
 
 ---
