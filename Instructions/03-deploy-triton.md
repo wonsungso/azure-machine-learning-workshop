@@ -17,6 +17,19 @@ Managed Online Endpoint로 배포하고 Triton Inference Server를 통해 추론
 
 ---
 
+## 📋 사전 준비사항 (Before you start)
+
+아래를 먼저 완료하세요:
+- [00-setup.md](./00-setup.md) 완료
+- [01-preprocess-data-rapids.md](./01-preprocess-data-rapids.md) 완료
+- [02-train-model-pytorch.md](./02-train-model-pytorch.md) 완료
+  - ✅ 모델 학습 완료
+  - ✅ 모델 아티팩트 생성
+
+> **참고**: 이 Lab에는 Compute Cluster가 불필요합니다. Managed Online Endpoint가 추론 환경을 제공합니다.
+
+---
+
 ## 🧭 Workshop 전체 흐름에서의 위치
 
 ```
@@ -241,6 +254,42 @@ rg-aml-dl-workshop
 ```
 
 GPU 및 Endpoint 비용을 방지할 수 있습니다.
+
+---
+
+---
+
+# ⏹️ 실습 종료 후 리소스 정리
+
+모든 실습을 완료한 후 **비용 절감**을 위해 리소스를 정리하세요.
+
+## Step 1. Compute Instance 중지
+
+Azure ML Studio:
+
+```
+Manage → Compute → Compute Instances → ci-aml-workshop → Stop
+```
+
+상태가 **Stopped**으로 변경되면 완료입니다.
+
+## Step 2. Managed Online Endpoint 삭제 (선택사항)
+
+Endpoint가 필요 없으면 삭제하여 비용 절감:
+
+```
+Assets → Endpoints → ep-dl-workshop → Delete
+```
+
+## Step 3. 전체 리소스 그룹 삭제 (선택사항)
+
+Workshop을 완전히 정리할 경우 Azure Portal에서:
+
+```
+Resource Groups → rg-aml-dl-workshop → Delete resource group
+```
+
+이를 통해 모든 Azure 리소스(Workspace, Storage, Key Vault 등)가 제거됩니다.
 
 ---
 

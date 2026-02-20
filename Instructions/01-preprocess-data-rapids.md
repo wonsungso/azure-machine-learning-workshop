@@ -1,8 +1,8 @@
-# 🧪 Lab 01 — RAPIDS를 활용한 GPU 데이터 전처리
+# Lab 01 — RAPIDS를 활용한 GPU 데이터 전처리
 
 ---
 
-## 🎯 Lab 목표
+## Lab 목표
 
 이 Lab에서는 RAPIDS를 활용하여 GPU 기반 데이터 전처리를 수행합니다.
 
@@ -16,7 +16,7 @@
 
 ---
 
-## 🧭 Workshop 전체 흐름에서의 위치
+## Workshop 전체 흐름에서의 위치
 
 ```
 Setup
@@ -30,7 +30,7 @@ Triton Endpoint 배포
 
 ---
 
-## 🧠 RAPIDS란 무엇인가요?
+## RAPIDS란 무엇인가요?
 
 RAPIDS는 NVIDIA에서 제공하는 GPU 데이터 사이언스 라이브러리입니다.
 
@@ -40,12 +40,70 @@ RAPIDS는 NVIDIA에서 제공하는 GPU 데이터 사이언스 라이브러리�
 - cuML → GPU 기반 ML
 - cuGraph → GPU 그래프 처리
 
-간단히 말하면:
+---
+
+## 📋 사전 준비사항
+
+아래를 먼저 완료하세요:
+- [00-setup.md](./00-setup.md) 완료
+  - ✅ Azure ML Workspace 생성
+  - ✅ Compute Instance 생성
+  - ✅ Compute Cluster 생성 (GPU)
+  - ✅ Repository Clone
+
+---
+
+# 🔧 Environment 생성 (RAPIDS)
+
+RAPIDS 실행을 위해 **Custom Environment**를 생성해야 합니다.
+
+**Step 1. Environments 페이지 이동**
+
+Azure ML Studio 좌측:
 
 ```
-pandas = CPU 데이터 처리
-cuDF   = GPU 데이터 처리
+Assets → Environments
 ```
+
+---
+
+**Step 2. Custom Environment 생성**
+
+`+ Create` → `Create new environment from scratch`
+
+설정:
+
+```
+Name        : rapids-mlflow
+Description : RAPIDS cuDF environment with GPU support
+```
+
+---
+
+**Step 3. Select environment type 선택**
+
+`Dockerfile` 선택 후, 아래 Dockerfile 코드 입력:
+
+```dockerfile
+FROM rapidsai/rapidsai:21.10-cuda11.0-runtime-ubuntu18.04-py3.7
+RUN apt-get update \
+    && apt-get install -y fuse \
+    && source activate rapids \
+    && pip install azureml-mlflow \
+    && pip install azureml-dataprep
+```
+
+---
+
+**Step 4. 생성 및 빌드**
+
+`Create` 클릭 → Azure ML이 자동으로 Docker 이미지 빌드
+
+> ⏳ 이미지 빌드는 5~10분 소요
+> 
+> 빌드 진행률은 Environment의 **Details** 탭에서 확인 가능
+
+빌드 완료 후 상태: **Ready**
 
 ---
 
@@ -56,7 +114,7 @@ cuDF   = GPU 데이터 처리
 왼쪽 메뉴:
 
 ```
-Author → Notebooks
+Authoring → Notebooks
 ```
 
 ---
@@ -66,19 +124,14 @@ Author → Notebooks
 상단 메뉴에서 Terminal 실행 후 아래 명령어 입력:
 
 ```
-git clone https://github.com/MicrosoftLearning/mslearn-deep-learning
+git clone https://github.com/wonsungso/azure-machine-learning-workshop
 ```
-
----
-
-## ✅ Checkpoint
 
 Notebooks 목록에 아래 폴더가 생성되면 정상입니다.
-
 ```
-mslearn-deep-learning
+(azureml_py38) azureuser@ci-aml-workshop:~/cloudfiles/code/Users/user$ ls
+azure-machine-learning-workshop
 ```
-
 ---
 
 # 2️⃣ RAPIDS Notebook 실행
@@ -86,9 +139,9 @@ mslearn-deep-learning
 아래 경로의 Notebook을 엽니다.
 
 ```
-01-preprocess-data-rapids.ipynb
+azure-machine-learning-workshop/Notebooks/01-preprocess-data/01-process-data.ipynb
 ```
-
+![](./images/04_rapids_notebook_execution.png)
 Kernel 선택:
 
 ```
@@ -106,21 +159,19 @@ Kernel이 보이지 않는 경우:
 
 ---
 
-# 3️⃣ 데이터 로드 및 GPU DataFrame 생성
+# 3️⃣ 노트북 실행 — Azure ML에 작업 제출
 
-Notebook을 위에서부터 순서대로 실행합니다.
+![](./images/05_notebook_loaded.png)
 
-핵심 코드 개념:
+노트북(`01-process-data.ipynb`)의 코드가 기준입니다.
 
-```python
-import cudf
-df = cudf.read_csv("data.csv")
-```
+아래는 실행 순서만 간단히 안내합니다.
 
-설명:
+1. 위에서부터 셀 순서대로 실행
+2. 환경/컴퓨트 설정 셀에서 `compute_target` 값을 본인 클러스터 이름으로 변경
+3. 제출 셀 실행 후 완료까지 대기 (`run.wait_for_completion(show_output=True)`)
 
-- pandas 대신 cudf 사용
-- 데이터가 GPU 메모리에 로드됩니다.
+> 상세 코드는 이 문서가 아니라 노트북 셀 내용을 그대로 따르세요.
 
 ---
 
@@ -136,28 +187,29 @@ GPU를 활용하면:
 
 ---
 
-# 4️⃣ 데이터 전처리 결과 확인
+# 4️⃣ 작업 실행 모니터링 및 결과 확인
 
-Notebook 실행 후 다음을 확인합니다.
+노트북 실행 후 Azure ML Studio에서 결과만 확인합니다.
 
-- DataFrame shape 출력
-- GPU memory 사용 로그
-- 변환된 Feature 컬럼 확인
+1. **Jobs** → **All experiments**
+2. `preprocess-data` 선택
+3. 최신 Job 클릭
+4. 아래 3가지만 확인
+   - **Overview**: 상태/실행 시간
+   - **Metrics**: `processed rows`
+   - **Outputs+logs**: 로그 및 출력 파일
 
----
-
-## ✅ Checkpoint
-
-아래와 같은 출력이 보이면 정상입니다.
-
-```
-GPU DataFrame created
-Rows processed successfully
-```
+![](./images/06_jobs_all_experiments.png)
 
 ---
 
-# 🧱 현재까지 구성된 아키텍처
+## 다음 단계
+
+생성된 `outputs/processed_data.csv` 파일은 다음 Lab의 PyTorch 모델 학습에 사용됩니다.
+
+---
+
+# 현재까지 구성된 아키텍처
 
 ```
 Azure ML Workspace
@@ -169,35 +221,31 @@ Azure ML Workspace
 
 ---
 
-# ⚠️ Troubleshooting
-
-## ❌ Notebook이 느리게 실행됨
-
-가능 원인:
-
-- Kernel이 CPU 환경으로 선택됨
-
-해결:
-
-```
-RAPIDS Kernel로 변경 후 재실행
-```
-
 ---
 
-## ❌ cudf import 오류
+# ⏹️ 실습 종료 후 리소스 중지
 
-Compute Instance 재시작 후 다시 실행
+비용 절감을 위해 Compute Instance를 중지하세요.
 
----
+**Step 1. Compute 페이지 이동**
 
-# 🎤 Workshop 진행 포인트
+Azure ML Studio 좌측:
 
-이 Lab에서 강조할 내용:
+```
+Manage → Compute → Compute Instances
+```
 
-- RAPIDS는 pandas와 유사하지만 GPU 사용
-- 데이터 전처리도 GPU에서 수행 가능
-- Azure ML Notebook 환경은 별도 설치 없이 사용 가능
+**Step 2. Compute Instance 선택**
+
+```
+ci-aml-workshop
+```
+
+**Step 3. Stop 클릭**
+
+상태가 **Stopped**으로 변경되면 비용 청구 중단됩니다.
+
+> 💡 **참고**: Compute Cluster는 사용 후 자동으로 종료되므로 수동 중지 불필요합니다.
 
 ---
 
@@ -208,5 +256,3 @@ Compute Instance 재시작 후 다시 실행
 ```
 
 GPU Compute Cluster를 사용하여 PyTorch 모델 학습을 진행합니다.
-
-작성일: 2026-02-19

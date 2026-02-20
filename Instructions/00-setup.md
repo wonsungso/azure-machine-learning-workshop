@@ -1,8 +1,8 @@
-# 🧪 Lab 00 — Azure Machine Learning 환경 준비 (Setup)
+# Lab 00 — Azure Machine Learning 환경 준비 (Setup)
 
 ---
 
-## 🎯 Lab 목표
+## Lab 목표
 
 이 Lab에서는 Deep Learning 실습을 위한 Azure Machine Learning 기본 환경을 구성합니다.
 
@@ -17,10 +17,10 @@
 
 ---
 
-## 🧭 Workshop 전체 흐름에서의 위치
+## Workshop 전체 흐름에서의 위치
 
 ```
-Setup
+[현재] Setup
    ↓
 RAPIDS 데이터 전처리
    ↓
@@ -31,7 +31,7 @@ Triton Endpoint 배포
 
 ---
 
-## 🧠 Azure Machine Learning 한 줄 개념
+## Azure Machine Learning 란?
 
 Azure ML Workspace는 ML 작업을 위한 관리 플랫폼입니다.
 
@@ -72,6 +72,7 @@ Region         : Korea Central
 ```
 
 생성 후 **Launch Studio** 클릭
+![](./images/01_create_aml_workspace.png)
 
 ---
 
@@ -79,12 +80,13 @@ Region         : Korea Central
 
 Workspace 화면에서 Launch Studio 클릭 후 다음 메뉴 확인:
 
+![](./images/02_launch_studio.png)
+
 ```
-Author
+Authoring
 Assets
 Manage
 ```
-
 ---
 
 # 4️⃣ Compute Instance 생성
@@ -101,36 +103,51 @@ Manage → Compute
 Name    : ci-aml-workshop
 VM Size : Standard_DS3_v2
 ```
-
+![](./images/03_compute_instance.png)
 상태가 Running 이 되면 완료입니다.
 
 ---
 
-# 🧱 현재 아키텍처
+# 5️⃣ Compute Cluster 생성 (GPU)
+
+좌측 메뉴:
 
 ```
-Azure ML Workspace
-        └── Compute Instance
+Manage → Compute
 ```
+
+**Compute clusters** 탭에서 새 클러스터 생성:
+
+```
+Compute name      : cc-aml-gpu
+VM priority       : Low priority
+VM type           : GPU
+VM size           : Standard_NC6S_V3 (NCv3 series with Tesla V100)
+Min nodes         : 0
+Max nodes         : 1
+Region            : Korea Central
+```
+
+> ⚠️ **주의**: NCv3 series (V100 GPU)가 필요합니다.  
+> 만약 리전에서 사용 불가능하면 다른 리전으로 변경하세요.
+
+생성 후 상태가 **Succeeded**로 변경되면 완료입니다.
 
 ---
 
-# ⚠️ Troubleshooting
-
-## Compute Instance 생성 실패
-
-VM quota 부족 시:
+# 현재 구성
 
 ```
-Standard_DS2_v2 사용
+Azure ML Workspace
+        ├── Compute Instance (CPU)
+        │     └── 노트북 실행 환경 (ci-aml-workshop)
+        │
+        └── Compute Cluster (GPU)
+              └── 스크립트 실행 환경 (cc-aml-gpu)
 ```
 
 ---
 
 # ▶️ Next Lab
 
-```
-01-preprocess-data-rapids.md
-```
-
-작성일: 2026-02-19
+[01-preprocess-data-rapids.md](./01-preprocess-data-rapids.md)

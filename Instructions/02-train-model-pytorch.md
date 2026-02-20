@@ -18,6 +18,16 @@ PyTorch 모델 학습을 수행합니다.
 
 ---
 
+## 📋 사전 준비사항 (Before you start)
+
+아래를 먼저 완료하세요:
+- [00-setup.md](./00-setup.md) 완료
+- [01-preprocess-data-rapids.md](./01-preprocess-data-rapids.md) 완료
+  - ✅ RAPIDS Environment 생성
+  - ✅ 데이터 전처리 완료 (`processed_data.csv` 생성)
+
+---
+
 ## 🧭 Workshop 전체 흐름에서의 위치
 
 ```
@@ -264,6 +274,32 @@ Azure Portal → Quota 증가 요청
 - Azure ML은 Kubernetes 기반 Job 실행 구조
 - GPU는 필요할 때만 생성
 - Notebook과 Job은 역할이 다름
+
+---
+
+---
+
+# ⏹️ 실습 종료 후 리소스 중지
+
+Compute Instance를 중지하여 불필요한 비용 발생을 방지하세요.
+
+**Step 1. Compute 페이지 이동**
+
+Azure ML Studio 좌측:
+
+```
+Manage → Compute → Compute Instances
+```
+
+**Step 2. Compute Instance 중지**
+
+```
+ci-aml-workshop → Stop
+```
+
+상태가 **Stopped**으로 변경되면 비용 청구 중단됩니다.
+
+> 💡 **Compute Cluster는 이미 자동 종료됨** (idle 상태 시 자동 scale-down)
 
 ---
 
