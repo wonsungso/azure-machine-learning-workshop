@@ -137,32 +137,6 @@ Region            : Korea Central
 
 ---
 
-## 💡 Quota 확인 (Important)
-
-생성 전에 **Quota** 확인이 필수입니다:
-
-**필요 Cores:**
-- Compute Instance: 4 cores
-- Compute Cluster: 6 cores
-- **최대 동시 사용**: 10 cores
-
-**확인 방법:**
-```
-Manage → Compute → 우측 상단 "Quota" 버튼
-```
-
-**Quota별 권장 구성:**
-
-| 환경 | Quota | 가능여부 |
-|------|-------|--------|
-| 10 core | ✅ **정확히 맞음** | ✅ 가능 |
-| 6 core 이상 | ⚠️ Instance만 가능 | ⚠️ Cluster 불가 |
-| 6 core 미만 | ❌ 불충분 | ❌ 불가능 |
-
-> 💡 **팁**: Compute Cluster는 **Job 실행 시에만** cores를 사용하고, **Job 종료 후 자동으로 0 nodes로 축소**되므로 Quota가 정확히 10 cores여도 안전합니다.
-
----
-
 # 현재 구성
 
 ```
