@@ -9,7 +9,15 @@ if os.path.exists(RAPIDS_PYTHON) and os.path.realpath(sys.executable) != os.path
     os.execv(RAPIDS_PYTHON, [RAPIDS_PYTHON] + sys.argv)
 
 import cudf
-import mlflow
+
+
+def log_processed_rows(count_rows):
+    try:
+        from azureml.core import Run
+        run = Run.get_context()
+        run.log("processed rows", int(count_rows))
+    except Exception as error:
+        print(f"Metric logging skipped: {error}")
 
 # define functions
 
@@ -26,9 +34,8 @@ def main():
     processed_data = process_data(cols, dtypes, categorical_columns)
     
     count_rows = len(processed_data)
-    mlflow.log_metric("processed rows", count_rows)
-
     processed_data.to_csv('outputs/processed_data.csv', index=False)
+    log_processed_rows(count_rows)
     
 # Define a function to process an entire dataset 
 def process_data(cols, dtypes, categorical_columns):        

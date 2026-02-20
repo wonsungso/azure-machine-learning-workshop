@@ -256,8 +256,6 @@ ci-aml-workshop
 
 # ▶️ Next Lab
 
-```
-02-train-model-pytorch.md
-```
+[02-train-model-pytorch](./02-train-model-pytorch.md)
 
 GPU Compute Cluster를 사용하여 PyTorch 모델 학습을 진행합니다.
