@@ -1,6 +1,12 @@
 # import libraries
 import os
 import argparse
+import sys
+
+RAPIDS_PYTHON = "/opt/conda/envs/rapids/bin/python"
+if os.path.exists(RAPIDS_PYTHON) and os.path.realpath(sys.executable) != os.path.realpath(RAPIDS_PYTHON):
+    print(f"Switching Python runtime to RAPIDS interpreter: {RAPIDS_PYTHON}")
+    os.execv(RAPIDS_PYTHON, [RAPIDS_PYTHON] + sys.argv)
 
 import cudf
 import mlflow
