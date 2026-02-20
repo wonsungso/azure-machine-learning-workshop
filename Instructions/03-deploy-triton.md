@@ -113,7 +113,7 @@ Assets → Models → densenet-onnx-model
 - Endpoint name: `aml-dl-workspace-<랜덤스트링>` (예: `aml-dl-workshop-jvaki`)
 - Deployment name: `densenet-onnx-model-1` (자동 생성)
 
-배포 완료까지 일반적으로 약 10분 소요됩니다.
+배포 완료까지 일반적으로 약 15~20 분 소요됩니다.
 
 ---
 
@@ -123,6 +123,8 @@ Assets → Models → densenet-onnx-model
 
 - REST endpoint
 - Primary key
+
+![](./images/10_endpoint_keys.png)
 
 이 값은 다음 단계(호출 노트북)에서 사용합니다.
 
