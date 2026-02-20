@@ -4,7 +4,7 @@
 
 본 워크샵에서는 Azure ML Workspace 생성부터 GPU 학습, Triton Endpoint 배포까지 End-to-End 흐름을 실습합니다.
 
-본 워크샵은 [Train compute-intensive models with Azure Machine Learning](https://github.com/MicrosoftLearning/mslearn-deep-learning) 를 기반으로 작성 되었습니다.
+본 워크샵은 [Train compute-intensive models with Azure Machine Learning](https://github.com/MicrosoftLearning/mslearn-deep-learning) 를 참고하여 작성 되었습니다.
 
 ------------------------------------------------------------------------
 
