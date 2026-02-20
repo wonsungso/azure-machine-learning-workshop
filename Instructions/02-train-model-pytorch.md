@@ -208,8 +208,6 @@ ci-aml-workshop → Stop
 
 # ▶️ Next Lab
 
-```
-03-deploy-triton.md
-```
+[03-deploy-triton.md](./03-deploy-triton.md)
 
 학습된 모델을 Triton Inference Server로 배포합니다.
