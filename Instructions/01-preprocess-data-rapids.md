@@ -69,13 +69,14 @@ Assets → Environments
 
 **Step 2. Custom Environment 생성**
 
-`+ Create` → `Create new environment from scratch`
+`+ Create`
 
 설정:
 
 ```
 Name        : rapids-mlflow
 Description : RAPIDS cuDF environment with GPU support
+Select environment source : Create a new docker context
 ```
 
 ---
@@ -86,7 +87,8 @@ Description : RAPIDS cuDF environment with GPU support
 
 ```dockerfile
 FROM rapidsai/rapidsai:21.10-cuda11.0-runtime-ubuntu18.04-py3.7
-RUN apt-get update \
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
+   && apt-get update \
     && apt-get install -y fuse \
     && source activate rapids \
     && pip install azureml-mlflow \
@@ -103,7 +105,7 @@ RUN apt-get update \
 > 
 > 빌드 진행률은 Environment의 **Details** 탭에서 확인 가능
 
-빌드 완료 후 상태: **Ready**
+빌드 완료 후 상태: **Succeeded**
 
 ---
 
