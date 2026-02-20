@@ -63,7 +63,7 @@ Job = 학습 실행 요청
 
 ---
 
-# 1️⃣ Compute 상태 확인 (재생성 불필요)
+# 1️⃣ Compute 상태 확인
 
 Lab 00에서 이미 생성한 GPU Compute Cluster를 그대로 사용합니다.
 
