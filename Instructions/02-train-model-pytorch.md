@@ -110,6 +110,8 @@ azure-machine-learning-workshop/Notebooks/02-train-model/02-train-model.ipynb
 - `ScriptRunConfig` 셀에서 `compute_target`이 `cc-aml-gpu`인지 확인
 - 제출 셀 실행 (`run.wait_for_completion(show_output=True)`)
 
+> ⏳ Training Job은 약 20 분 소요 됩니다.
+
 ---
 
 ## ⏳ Job 실행 흐름
@@ -154,18 +156,6 @@ Outputs + logs
 - Epoch 로그
 - Loss 출력
 - GPU 사용 로그
-
----
-
-## 💡 Workshop Tip
-
-참석자에게 꼭 보여주세요:
-
-```
-GPU가 자동 생성되는 모습
-```
-
-Azure ML의 핵심 경험입니다.
 
 ---
 

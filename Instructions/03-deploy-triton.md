@@ -85,6 +85,7 @@ az ml model create -f create-triton-model.yaml
 
 완료 후 **Assets → Models**에서 `densenet-onnx-model`이 생성되었는지 확인합니다.
 
+![](./images/08_model_list.png)
 ---
 
 # 2️⃣ Managed Online Endpoint 배포
@@ -97,19 +98,20 @@ Azure ML Studio에서:
 Assets → Models → densenet-onnx-model
 ```
 
-`Deploy` → `Deploy to real-time endpoint` 선택
+`Use this model` → `Real-time endpoint` 선택
 
+![](./images/09_deploy_endpoint.png)
 ---
 
 ## Step 2. 배포 설정
 
-- Endpoint: **New**
-- Endpoint name: **고유 이름** (예: `ep-dl-workshop-<랜덤숫자>`)
-- Compute type: **Managed**
-- Authentication type: **Key**
-- Model: `densenet-onnx-model`
-- VM size: 가능하면 `Standard_NC6s_v3`, 불가 시 `Standard_F4s_v2`
 - Instance count: `1`
+- Virtual machine:
+  - 선호 순서: `Standard_NC6s_v3` (GPU) 혹은 `Standard_D2as_v4` (CPU)
+  - Quota 제약이 있으면 CPU 인스턴스를 선택합니다.
+- Endpoint: **New**
+- Endpoint name: `aml-dl-workspace-<랜덤스트링>` (예: `aml-dl-workshop-jvaki`)
+- Deployment name: `densenet-onnx-model-1` (자동 생성)
 
 배포 완료까지 일반적으로 약 10분 소요됩니다.
 
@@ -123,6 +125,37 @@ Assets → Models → densenet-onnx-model
 - Primary key
 
 이 값은 다음 단계(호출 노트북)에서 사용합니다.
+
+---
+
+## ⚠️ 배포 실패 시 트러블슈팅
+
+### 에러 1: "Resource provider [N/A] isn't registered"
+
+**원인**: 구독의 필요한 리소스 공급자가 등록되지 않음
+
+**해결책**:
+
+Azure Portal에서 아래 리소스 공급자를 **등록 순서대로** 확인/등록하세요:
+
+**우선 순위 (필수)**
+- `Microsoft.MachineLearningServices`
+- `Microsoft.CDN`
+- `Microsoft.PolicyInsights`
+
+**추가 (필요한 경우)**
+- `Microsoft.Storage`
+- `Microsoft.ContainerRegistry`
+- `Microsoft.KeyVault`
+- `Microsoft.Notebooks`
+- `Microsoft.Network` (Virtual Network 사용 시)
+
+**등록 방법**:
+1. Azure Portal → 구독 선택
+2. **리소스 공급자(Resource providers)** 검색
+3. 각 공급자의 상태 확인
+4. NotRegistered인 경우 **Register** 클릭
+5. Endpoint 배포 재시도
 
 ---
 
@@ -152,13 +185,13 @@ azure-machine-learning-workshop/Notebooks/03-deploy-model/03-invoke-endpoint.ipy
 Manage → Compute → Compute Instances → ci-aml-workshop → Stop
 ```
 
-## Step 2. Endpoint 삭제 (선택)
+## Step 2. Endpoint 삭제
 
 ```
 Assets → Endpoints → 생성한 endpoint → Delete
 ```
 
-## Step 3. 전체 리소스 정리 (선택)
+## Step 3. 전체 리소스 정리
 
 Workshop을 완전히 종료할 경우:
 

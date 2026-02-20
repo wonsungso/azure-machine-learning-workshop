@@ -176,6 +176,7 @@ Kernel이 보이지 않는 경우:
 2. 환경/컴퓨트 설정 셀에서 `compute_target` 값을 본인 클러스터 이름으로 변경
 3. 제출 셀 실행 후 완료까지 대기 (`run.wait_for_completion(show_output=True)`)
 
+> ⏳ Data Processing Job은 4~5분 소요 됩니다.
 > 상세 코드는 이 문서가 아니라 노트북 셀 내용을 그대로 따르세요.
 
 ---
