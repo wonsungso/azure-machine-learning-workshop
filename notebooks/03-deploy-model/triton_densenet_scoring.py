@@ -6,6 +6,21 @@ import requests
 from PIL import Image
 
 import gevent.ssl
+import geventhttpclient.connectionpool as cp
+
+_orig = cp.ConnectionPool._is_socket_alive
+
+def _patched_is_socket_alive(self, sock):
+    try:
+        return _orig(self, sock)
+    except ValueError as e:
+        # SSL 소켓에서 flags recv 금지로 발생하는 케이스 우회
+        if "non-zero flags not allowed" in str(e):
+            return True
+        raise
+
+cp.ConnectionPool._is_socket_alive = _patched_is_socket_alive
+# ------------------------------------------------------------------
 import tritonclient.http as tritonhttpclient
 
 
@@ -56,6 +71,22 @@ def postprocess(max_label):
     final_label = label_dict[max_label]
     return f"{max_label} : {final_label}"
 
+def download_image_bytes(url: str) -> bytes:
+    r = requests.get(
+        url,
+        allow_redirects=True,
+        timeout=30,
+        headers={"User-Agent": "Mozilla/5.0"},
+    )
+    r.raise_for_status()
+
+    ctype = r.headers.get("Content-Type", "")
+    if not ctype.startswith("image/"):
+        # 이미지가 아니면, 실제로 뭐가 왔는지 앞부분을 찍어서 원인 파악
+        preview = r.content[:300]
+        raise ValueError(f"Not an image. Content-Type={ctype}, first_bytes={preview!r}")
+
+    return r.content
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -83,7 +114,8 @@ if __name__ == "__main__":
     status_ctx = triton_client.is_model_ready(model_name, "1", headers)
     print("Is model ready - {}".format(status_ctx))
 
-    img_content = requests.get(args.image_url).content
+    # img_content = requests.get(args.image_url).content
+    img_content = download_image_bytes(args.image_url)
     img_data = preprocess(img_content)
 
     # Populate inputs and outputs
