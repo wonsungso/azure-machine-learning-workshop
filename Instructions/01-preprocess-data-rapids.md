@@ -91,7 +91,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
    && apt-get update \
    && apt-get install -y fuse \
-   && conda run -n rapids pip install azureml-mlflow azureml-dataprep \
+   && conda run -n rapids pip install azureml-mlflow azureml-dataprep azureml-core azureml-defaults \
    && apt-get clean \
    && rm -rf /var/lib/apt/lists/*
 ENV PATH=/opt/conda/envs/rapids/bin:$PATH
@@ -108,7 +108,7 @@ ENV CONDA_DEFAULT_ENV=rapids
 > 
 > 빌드 진행률은 Environment의 **Details** 탭에서 확인 가능
 
-빌드 완료 후 상태: **Succeeded**
+빌드 완료 후 상태: **Running**
 
 ---
 
@@ -174,10 +174,10 @@ Kernel이 보이지 않는 경우:
 아래는 실행 순서만 간단히 안내합니다.
 
 1. 위에서부터 셀 순서대로 실행
-2. 환경/컴퓨트 설정 셀에서 `compute_target` 값을 본인 클러스터 이름으로 변경
-3. 제출 셀 실행 후 완료까지 대기 (`run.wait_for_completion(show_output=True)`)
+2. 제출 셀 실행 후 완료까지 대기 (`run.wait_for_completion(show_output=True)`)
 
-> ⏳ Data Processing Job은 4~5분 소요 됩니다.
+> ⏳ Image 준비 및 GPU Cluster Resize Job 은 10~15 분 소요 됩니다.
+> ⏳ Data Processing Job은 4~5 분 소요 됩니다.
 > 상세 코드는 이 문서가 아니라 노트북 셀 내용을 그대로 따르세요.
 
 ---
@@ -196,12 +196,12 @@ GPU를 활용하면:
 
 # 4️⃣ 작업 실행 모니터링 및 결과 확인
 
-노트북 실행 후 Azure ML Studio에서 결과만 확인합니다.
+노트북 실행 후 Azure ML Studio에서 결과를 확인합니다.
 
 1. **Jobs** → **All experiments**
 2. `preprocess-data` 선택
 3. 최신 Job 클릭
-4. 아래 3가지만 확인
+4. 아래 2가지 확인
    - **Overview**: 상태/실행 시간
    - **Metrics**: `processed rows`
    - **Outputs+logs**: 로그 및 출력 파일
