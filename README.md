@@ -38,7 +38,7 @@
 
 ## 1️⃣ 환경 준비
 
-👉 Instructions/00-set-up.md
+👉 [Instructions/00-setup.md](./Instructions/00-setup.md)
 
 -   Resource Group 생성
 -   Azure ML Workspace 생성
@@ -48,7 +48,7 @@
 
 ## 2️⃣ RAPIDS 데이터 전처리
 
-👉 Instructions/01-preprocess-data-rapids.md
+👉 [Instructions/01-preprocess-data-rapids.md](./Instructions/01-preprocess-data-rapids.md)
 
 -   Notebook 환경 준비
 -   cuDF 기반 GPU 데이터 처리
@@ -57,7 +57,7 @@
 
 ## 3️⃣ PyTorch 모델 학습
 
-👉 Instructions/02-train-model-pytorch.md
+👉 [Instructions/02-train-model-pytorch.md](./Instructions/02-train-model-pytorch.md)
 
 -   GPU Compute Cluster 생성
 -   Azure ML Job 실행
@@ -67,7 +67,7 @@
 
 ## 4️⃣ Triton Endpoint 배포
 
-👉 Instructions/03-deploy-triton.md
+👉 [Instructions/03-deploy-triton.md](./Instructions/03-deploy-triton.md)
 
 -   Managed Online Endpoint 생성
 -   Triton Deployment 구성
