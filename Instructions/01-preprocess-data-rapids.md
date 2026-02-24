@@ -147,6 +147,7 @@ azure-machine-learning-workshop
 azure-machine-learning-workshop/Notebooks/01-preprocess-data/01-process-data.ipynb
 ```
 ![](./images/04_rapids_notebook_execution.png)
+
 Kernel 선택:
 
 ```
