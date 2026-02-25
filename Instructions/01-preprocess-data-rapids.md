@@ -91,7 +91,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub \
    && apt-get update \
    && apt-get install -y fuse \
-   && conda run -n rapids pip install azureml-mlflow azureml-dataprep azureml-core azureml-defaults \
+   && conda run -n rapids pip install azureml-mlflow azureml-dataprep \
    && apt-get clean \
    && rm -rf /var/lib/apt/lists/*
 ENV PATH=/opt/conda/envs/rapids/bin:$PATH
