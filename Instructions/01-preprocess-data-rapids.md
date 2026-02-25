@@ -203,7 +203,6 @@ GPU를 활용하면:
 3. 최신 Job 클릭
 4. 아래 2가지 확인
    - **Overview**: 상태/실행 시간
-   - **Metrics**: `processed rows`
    - **Outputs+logs**: 로그 및 출력 파일
 
 ![](./images/06_jobs_all_experiments.png)
