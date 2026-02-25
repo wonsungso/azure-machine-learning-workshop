@@ -6,6 +6,8 @@
 
 본 워크샵은 [Train compute-intensive models with Azure Machine Learning](https://github.com/MicrosoftLearning/mslearn-deep-learning) 를 참고하여 작성 되었습니다.
 
+![overview](./Instructions/images/00_overview.png)
+
 ------------------------------------------------------------------------
 
 # 🎯 Workshop 목표
